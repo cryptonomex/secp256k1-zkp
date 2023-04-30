@@ -16,6 +16,15 @@
 #include <limits.h>
 #include <stdio.h>
 
+typedef struct {
+    void (*fn)(const char *text, void* data);
+    const void* data;
+} secp256k1_callback;
+
+static SECP256K1_INLINE void secp256k1_callback_call(const secp256k1_callback * const cb, const char * const text) {
+    cb->fn(text, (void*)cb->data);
+}
+
 #ifdef DETERMINISTIC
 #define TEST_FAILURE(msg) do { \
     fprintf(stderr, "%s\n", msg); \

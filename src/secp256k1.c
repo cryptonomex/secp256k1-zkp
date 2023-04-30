@@ -23,6 +23,12 @@
 #include "borromean_impl.h"
 #include "rangeproof_impl.h"
 
+#define ARG_CHECK(cond) do { \
+    if (EXPECT(!(cond), 0)) { \
+        return 0; \
+    } \
+} while(0)
+
 struct secp256k1_context_struct {
     secp256k1_ecmult_context_t ecmult_ctx;
     secp256k1_ecmult_gen_context_t ecmult_gen_ctx;
@@ -77,11 +83,12 @@ int secp256k1_ecdsa_verify(const secp256k1_context_t* ctx, const unsigned char *
     secp256k1_ecdsa_sig_t s;
     secp256k1_scalar_t m;
     int ret = -3;
-    DEBUG_CHECK(ctx != NULL);
-    DEBUG_CHECK(secp256k1_ecmult_context_is_built(&ctx->ecmult_ctx));
-    DEBUG_CHECK(msg32 != NULL);
-    DEBUG_CHECK(sig != NULL);
-    DEBUG_CHECK(pubkey != NULL);
+
+    ARG_CHECK(ctx != NULL);
+    ARG_CHECK(secp256k1_ecmult_context_is_built(&ctx->ecmult_ctx));
+    ARG_CHECK(msg32 != NULL);
+    ARG_CHECK(sig != NULL);
+    ARG_CHECK(pubkey != NULL);
 
     secp256k1_scalar_set_b32(&m, msg32, NULL);
 

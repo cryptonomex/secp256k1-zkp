@@ -247,8 +247,9 @@ SECP256K1_INLINE static int secp256k1_range_proveparams(uint64_t *v, int *rings,
         *v = 0;
         *npub = 2;
     }
-    VERIFY_CHECK(*v * *scale + *min_value == value);
-    VERIFY_CHECK(*rings > 0);
+    if (*rings == 0) return 0;
+
+    VERIFY_CHECK(*v * *scale + *min_value == value);    
     VERIFY_CHECK(*rings <= 32);
     VERIFY_CHECK(*npub <= 128);
     return 1;
